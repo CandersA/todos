@@ -1,6 +1,5 @@
 import './styles.css';
 
-const element = document.getElementById('content');
 const addProj = document.querySelector('.create-proj');
 const allProjectsDiv = document.querySelector('.all-projects');
 allProjectsDiv.textContent = 'My default project';
@@ -14,11 +13,11 @@ const getNotes = (() => {
 })();
 
 const toDo = (title, description, dueDate) => {
-  const complete = false;
-  const checkList = () => getChecklist();
-  const priority = 0;
+  // const complete = false;
+  // const checkList = () => getChecklist();
+  // const priority = 0;
 
-  const notes = () => getNotes();
+  // const notes = () => getNotes();
   const getTitle = () => title;
   const getDesc = () => description;
   const getDueDate = () => dueDate;
@@ -54,48 +53,69 @@ const allProjects = (() => {
 
 const displayController = (() => {
   const { projects } = allProjects;
+  const todoContainer = document.querySelector('.todos');
+
+  function addTodoButton(id) {
+    const previousBtns = Array.from(todoContainer.getElementsByClassName('project-add'));
+    previousBtns.forEach((btn) => btn.remove());
+
+    const projectAddTodo = document.createElement('button');
+    projectAddTodo.textContent = 'Add a To Do item';
+    projectAddTodo.setAttribute('id', id);
+    projectAddTodo.classList.add('project-add');
+    todoContainer.appendChild(projectAddTodo);
+
+    projectAddTodo.addEventListener('click', () => {
+      const todoName = prompt('Please enter name');
+      const todoDesc = prompt('Please enter description');
+      const todoDuoDate = prompt('Please enter due date');
+      projects[id].addToDo(todoName, todoDesc, todoDuoDate);
+      const thisProjectsToDos = allProjects.projects[id].getToDos();
+      displayController.displayToDos(thisProjectsToDos, id);
+    });
+  }
 
   function displayProjects() {
     let i = 0;
-    let projectAddTodo;
-
     allProjectsDiv.textContent = '';
+    todoContainer.textContent = '';
+
     projects.forEach((project) => {
       const projectDiv = document.createElement('div');
       const projectSpan = document.createElement('span');
       projectSpan.textContent = project.getTitle();
 
-      projectAddTodo = document.createElement('button');
-      projectAddTodo.textContent = '+';
-      projectAddTodo.setAttribute('id', i);
-      projectAddTodo.classList.add('project-add');
-
       projectDiv.classList.add('project');
       projectDiv.setAttribute('id', i);
       projectDiv.appendChild(projectSpan);
-      projectDiv.appendChild(projectAddTodo);
 
       allProjectsDiv.appendChild(projectDiv);
+      addTodoButton(i);
       i += 1;
       return { i };
     });
   }
 
-  function displayToDos(getTodos) {
+  function displayToDos(getTodos, id) {
     let j = 0;
 
-    const todoContainer = document.querySelector('.todos');
-    todoContainer.textContent = '';
+    const todoElements = Array.from(todoContainer.getElementsByClassName('todo'));
+    todoElements.forEach((element) => element.remove());
+
+    addTodoButton(id);
+
     getTodos.forEach((todo) => {
       const todoDiv = document.createElement('div');
       const todoTitle = document.createElement('span');
       const todoDesc = document.createElement('span');
       const todoDue = document.createElement('span');
-      todoDiv.classList.add('todo');
-      todoDiv.setAttribute('id', j);
+
       todoTitle.textContent = todo.getTitle();
       todoDesc.textContent = todo.getDesc();
       todoDue.textContent = todo.getDueDate();
+
+      todoDiv.classList.add('todo');
+      todoDiv.setAttribute('id', j);
       todoDiv.appendChild(todoTitle);
       todoDiv.appendChild(todoDesc);
       todoDiv.appendChild(todoDue);
@@ -105,46 +125,35 @@ const displayController = (() => {
     });
   }
 
-  return { displayProjects, displayToDos };
+  return { displayProjects, displayToDos, addTodoButton };
 })();
 
 function listenToProjects() {
-  const projectsAddTodo = Array.from(document.getElementsByClassName('project-add'));
   const projectsDOM = Array.from(document.getElementsByClassName('project'));
 
   projectsDOM.forEach((project) => {
     project.addEventListener('click', () => {
       const thisProjectsToDos = allProjects.projects[project.id].getToDos();
-      displayController.displayToDos(thisProjectsToDos);
-    });
-  });
-
-  projectsAddTodo.forEach((addTodo) => {
-    addTodo.addEventListener('click', () => {
-      const todoName = prompt('Please enter name');
-      const todoDesc = prompt('Please enter description');
-      const todoDuoDate = prompt('Please enter due date');
-      allProjects.projects[addTodo.id].addToDo(todoName, todoDesc, todoDuoDate);
+      displayController.displayToDos(thisProjectsToDos, project.id);
     });
   });
 }
+
+addProj.onclick = () => {
+  const projName = prompt('Please enter project name');
+  allProjects.addProject(projName);
+  displayController.displayProjects();
+  listenToProjects();
+};
 
 function displayDefault() {
   allProjects.addProject('Default project');
   displayController.displayProjects();
   listenToProjects();
+  displayController.addTodoButton(0);
 }
 
 window.onload = displayDefault;
-
-addProj.addEventListener('click', () => {
-  const projName = prompt('Please enter project name');
-  allProjects.addProject(projName);
-  displayController.displayProjects();
-  listenToProjects();
-
-  console.log(allProjects.projects);
-});
 
 // Click on add project
 
