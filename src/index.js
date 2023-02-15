@@ -2,9 +2,8 @@ import './styles.css';
 
 const element = document.getElementById('content');
 const addProj = document.querySelector('.create-proj');
-const toDoProj = document.querySelector('.add-todo');
-const showProject = document.querySelector('.showoff');
-element.textContent = 'Hello webpack';
+const allProjectsDiv = document.querySelector('.all-projects');
+allProjectsDiv.textContent = 'My default project';
 
 const getChecklist = (() => {
 
@@ -31,12 +30,16 @@ const Project = (title) => {
   const todos = [];
   const getTitle = () => title;
 
-  function addToDo(id, todoTitle, description, dueDate) {
+  function addToDo(todoTitle, description, dueDate) {
     const newToDo = toDo(todoTitle, description, dueDate);
     todos.push(newToDo);
   }
 
-  return { getTitle, addToDo, todos };
+  function getToDos() {
+    return todos;
+  }
+
+  return { getTitle, addToDo, getToDos };
 };
 
 const allProjects = (() => {
@@ -56,47 +59,81 @@ const displayController = (() => {
     let i = 0;
     let projectAddTodo;
 
-    element.textContent = '';
+    allProjectsDiv.textContent = '';
     projects.forEach((project) => {
       const projectDiv = document.createElement('div');
       const projectSpan = document.createElement('span');
+      projectSpan.textContent = project.getTitle();
+
       projectAddTodo = document.createElement('button');
-      projectAddTodo.textContent = 'Add ToDo to this project';
+      projectAddTodo.textContent = '+';
       projectAddTodo.setAttribute('id', i);
       projectAddTodo.classList.add('project-add');
+
       projectDiv.classList.add('project');
-      projectSpan.textContent = project.getTitle();
+      projectDiv.setAttribute('id', i);
       projectDiv.appendChild(projectSpan);
       projectDiv.appendChild(projectAddTodo);
-      element.appendChild(projectDiv);
+
+      allProjectsDiv.appendChild(projectDiv);
       i += 1;
-      return { i, projectAddTodo };
+      return { i };
     });
   }
 
-  return { displayProjects };
+  function displayToDos(getTodos) {
+    let j = 0;
+
+    const todoContainer = document.querySelector('.todos');
+    todoContainer.textContent = '';
+    getTodos.forEach((todo) => {
+      const todoDiv = document.createElement('div');
+      const todoTitle = document.createElement('span');
+      const todoDesc = document.createElement('span');
+      const todoDue = document.createElement('span');
+      todoDiv.classList.add('todo');
+      todoDiv.setAttribute('id', j);
+      todoTitle.textContent = todo.getTitle();
+      todoDesc.textContent = todo.getDesc();
+      todoDue.textContent = todo.getDueDate();
+      todoDiv.appendChild(todoTitle);
+      todoDiv.appendChild(todoDesc);
+      todoDiv.appendChild(todoDue);
+      todoContainer.appendChild(todoDiv);
+      j += 1;
+      return { j };
+    });
+  }
+
+  return { displayProjects, displayToDos };
 })();
 
 addProj.addEventListener('click', () => {
   const projName = prompt('Please enter project name');
   allProjects.addProject(projName);
   displayController.displayProjects();
-  const projectsDOM = Array.from(document.getElementsByClassName('project-add'));
 
-  projectsDOM.forEach((projectDOM) => {
-    projectDOM.addEventListener('click', () => {
+  const projectsAddTodo = Array.from(document.getElementsByClassName('project-add'));
+  const projectsDOM = Array.from(document.getElementsByClassName('project'));
+
+  projectsDOM.forEach((project) => {
+    project.addEventListener('click', () => {
+      const thisProjectsToDos = allProjects.projects[project.id].getToDos();
+      displayController.displayToDos(thisProjectsToDos);
+    });
+  });
+
+  projectsAddTodo.forEach((addTodo) => {
+    addTodo.addEventListener('click', () => {
       const todoName = prompt('Please enter name');
       const todoDesc = prompt('Please enter description');
       const todoDuoDate = prompt('Please enter due date');
-      allProjects.projects[projectDOM.id].addToDo(todoName, todoDesc, todoDuoDate);
+      allProjects.projects[addTodo.id].addToDo(todoName, todoDesc, todoDuoDate);
     });
   });
 
   console.log(allProjects.projects);
 });
-
-toDoProj.addEventListener('click', () => {});
-showProject.addEventListener('click', () => {});
 
 // Click on add project
 
