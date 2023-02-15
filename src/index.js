@@ -108,11 +108,7 @@ const displayController = (() => {
   return { displayProjects, displayToDos };
 })();
 
-addProj.addEventListener('click', () => {
-  const projName = prompt('Please enter project name');
-  allProjects.addProject(projName);
-  displayController.displayProjects();
-
+function listenToProjects() {
   const projectsAddTodo = Array.from(document.getElementsByClassName('project-add'));
   const projectsDOM = Array.from(document.getElementsByClassName('project'));
 
@@ -131,6 +127,21 @@ addProj.addEventListener('click', () => {
       allProjects.projects[addTodo.id].addToDo(todoName, todoDesc, todoDuoDate);
     });
   });
+}
+
+function displayDefault() {
+  allProjects.addProject('Default project');
+  displayController.displayProjects();
+  listenToProjects();
+}
+
+window.onload = displayDefault;
+
+addProj.addEventListener('click', () => {
+  const projName = prompt('Please enter project name');
+  allProjects.addProject(projName);
+  displayController.displayProjects();
+  listenToProjects();
 
   console.log(allProjects.projects);
 });
