@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 *,
 *::after,
 *::before {
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body,
@@ -15,7 +18,7 @@ body {
 }
 
 .sidebar {
-    background-color: grey;
+    background-color: rgb(221, 221, 221);
     width: 300px;
     display: flex;
     flex-direction: column;
@@ -27,23 +30,25 @@ body {
 .all-projects {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    width: 100%;
+    padding-left: 20px;
     gap: 15px;
 }
 
 .project {
     display: flex;
     gap: 20px;
+    transition: all 100ms;
 }
 
-.wrapper {
-    background-color: lightgrey;
-    flex: 1;
-    display: flex;
-    justify-content: center;
+.project:hover,
+.project:active {
+    cursor: pointer;
+    color: grey;
 }
 
-#content {
+.content {
     height: 100%;
     width: 80%;
     display: flex;
@@ -52,22 +57,29 @@ body {
     justify-content: center;
 }
 
-.todos {
+.create-proj {
+    border: none;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+    height: 45px;
+    background-color: rgb(241, 241, 241);
+    font-size: 14px;
+    transition: all 100ms;
 }
 
-.todo {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 20px;
+.create-proj:hover,
+.create-proj:active {
+    cursor: pointer;
     background-color: white;
 }
 
-.project-add {
-    padding: 10px 0;
-    margin: 0 10vw;
+.nameinput {
+    width: 100%;
+    padding-left: 20px;
+    height: 45px;
+    border: none;
+    display: none;
+}
+
+.nameinput:focus {
+    outline: none;
 }
