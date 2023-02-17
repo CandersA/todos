@@ -1,6 +1,7 @@
 import TodoList from "./TodoList";
 
 const Storage = (() => {
+
   const changeProjectName = (project, newName) => {
     project.setName(newName);
   };

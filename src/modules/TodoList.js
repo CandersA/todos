@@ -8,7 +8,12 @@ const TodoList = (() => {
     projects.push(Project(projectName));
   };
 
-  return { addProject, projects };
+  const getProject = (index) => {
+    const project = projects[index];
+    return project;
+  };
+
+  return { addProject, getProject };
 })();
 
 export default TodoList;

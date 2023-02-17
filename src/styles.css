@@ -26,6 +26,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 50px 20px;
+  position: relative;
 }
 
 .newproject {
@@ -108,9 +109,10 @@ body {
 .addicon {
   height: 50px;
   position: absolute;
-  left: 20px;
+  right: -80px;
   bottom: 20px;
   fill: grey;
+  z-index: 2;
 }
 
 .addicon:hover,
