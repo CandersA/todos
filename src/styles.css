@@ -17,6 +17,19 @@ body {
   min-height: 100vh;
 }
 
+.disable {
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.164);
+  display: none;
+}
+
+.disable.active {
+  display: block;
+}
+
 /* SIDEBAR */
 .sidebar {
   background-color: rgb(235, 235, 235);
@@ -108,11 +121,19 @@ body {
 
 .addicon {
   height: 50px;
+  width: 50px;
   position: absolute;
   right: -80px;
   bottom: 20px;
-  fill: grey;
+  fill: white;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: grey;
+  border-radius: 50px;
+  color: white;
+  transition: all 150ms;
 }
 
 .addicon:hover,
@@ -130,8 +151,19 @@ body {
   box-shadow: 5px 5px rgb(206, 206, 206);
 }
 
+.task span {
+  flex: 1;
+}
+
+.task span:nth-child(2) {
+  display: flex;
+  justify-content: center;
+}
+
 .taskicons {
   display: flex;
+  justify-content: flex-end;
+  flex: 1;
   gap: 10px;
 }
 
@@ -154,8 +186,9 @@ body {
   transform: translate(-50%, -50%);
   width: 600px;
   background-color: rgb(233, 233, 233);
-  padding: 50px;
+  padding: 40px 50px 50px 50px;
   border-radius: 50px;
+  z-index: 2;
 }
 
 .addpopup.active {
@@ -174,6 +207,14 @@ body {
 .addpopup select:focus,
 .addpopup textarea:focus {
   outline: none;
+}
+
+.instruction {
+  font-size: 12px;
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 .addpopup > form {
