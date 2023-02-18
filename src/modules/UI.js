@@ -25,7 +25,7 @@ const UI = (() => {
 
   const getProjectHeading = (project) => {
     const headingDiv =
-    document.querySelector(".project-head");
+      document.querySelector(".project-head");
     headingDiv.textContent = "";
     const projectHeading = project.getName();
     headingDiv.prepend(projectHeading);
@@ -126,6 +126,16 @@ const UI = (() => {
     });
   };
 
+  const switchProject = (projectName) => {
+    const projects = Array.from(
+      document.getElementsByClassName("project")
+    );
+    const projectToClick = projects.filter(
+      (project) => project.textContent === projectName
+    );
+    projectToClick[0].click();
+  };
+
   let id = 0;
 
   const initNewProject = () => {
@@ -138,10 +148,14 @@ const UI = (() => {
     inputProjectName.style.display = "block";
     inputProjectName.focus();
     inputProjectName.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
+      if (
+        e.key === "Enter" &&
+        inputProjectName.value !== ""
+      ) {
         const projectName = inputProjectName.value;
         TodoList.addProject(projectName);
         displayProject(TodoList.getProject(id), id);
+        switchProject(projectName);
         addProjectButton.style.display = "block";
         inputProjectName.style.display = "none";
         inputProjectName.value = "";
@@ -164,15 +178,19 @@ const UI = (() => {
     getInput(popUp);
   };
 
-  const loadHomepage = () => {
+  const getDefaultProject = () => {
     const defaultProject = TodoList.getProject(0);
 
-    document.addEventListener("keydown", handleKeyInput);
-    initEventListeners();
     displayProject(defaultProject, 0);
     displayTasks(defaultProject);
     getProjectHeading(defaultProject);
     id += 1;
+  }
+
+  const loadHomepage = () => {
+    document.addEventListener("keydown", handleKeyInput);
+    initEventListeners();
+    getDefaultProject();
   };
 
   return { loadHomepage };
