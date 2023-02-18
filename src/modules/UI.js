@@ -73,7 +73,7 @@ const UI = (() => {
       if (
         e.key === "Enter" &&
         popUp.classList.contains("active") &&
-        selectedProject.value !== ""
+        selectedProject.value !== "default"
       ) {
         selectedProject = TodoList.getProject(
           taskProject.value
@@ -86,6 +86,9 @@ const UI = (() => {
           );
         }
         displayTasks(selectedProject);
+        taskName.value = "";
+        taskDate.value = "";
+        taskProject.value = "default";
         togglePopup();
       }
     });
@@ -103,24 +106,71 @@ const UI = (() => {
     const newSelection = document.createElement("option");
 
     newSelection.setAttribute("value", id);
+    newSelection.setAttribute("id", `selection-${id}`);
     newSelection.textContent = projectName;
     projectSelect.appendChild(newSelection);
+  };
+
+  const initRemoveButtonForProject = (
+    addTo,
+    project,
+    id
+  ) => {
+    const previousButtons = Array.from(
+      document.getElementsByClassName("project-remove")
+    );
+    previousButtons.forEach((button) => {
+      button.remove();
+    });
+
+    const projectRemoveIcon =
+      document.createElement("span");
+
+    projectRemoveIcon.classList.add("project-remove");
+    projectRemoveIcon.textContent = "-";
+
+    addTo.prepend(projectRemoveIcon);
+
+    projectRemoveIcon.addEventListener("click", () => {
+      const appendToDiv =
+        document.querySelector(".projects");
+      const projectToRemoveFromDOM =
+        document.getElementById(`project-${id}`);
+      const projectSelect = document.getElementById(`selection-${id}`);
+
+      appendToDiv.removeChild(projectToRemoveFromDOM);
+      TodoList.removeProject(id);
+      projectSelect.remove();
+
+      const firstProject =
+        document.querySelector(".project");
+      if (firstProject === null) {
+        document.querySelector(
+          ".project-head"
+        ).textContent = "There are no projects";
+      } else {
+        firstProject.click();
+      }
+    });
   };
 
   const displayProject = (project, id) => {
     const appendToDiv = document.querySelector(".projects");
     const projectName = project.getName();
     const projectDiv = document.createElement("div");
+    const projectSpan = document.createElement("span");
+
     projectDiv.classList.add("project");
     projectDiv.setAttribute("id", `project-${id}`);
-    const projectSpan = document.createElement("span");
     projectSpan.textContent = projectName;
+
     projectDiv.appendChild(projectSpan);
     appendToDiv.appendChild(projectDiv);
 
     addProjectToSelection(id, projectName);
 
     projectDiv.addEventListener("click", () => {
+      initRemoveButtonForProject(projectDiv, project, id);
       displayTasks(TodoList.getProject(id));
       getProjectHeading(TodoList.getProject(id));
     });
@@ -131,7 +181,8 @@ const UI = (() => {
       document.getElementsByClassName("project")
     );
     const projectToClick = projects.filter(
-      (project) => project.textContent === projectName
+      (project) =>
+        project.lastChild.textContent === projectName
     );
     projectToClick[0].click();
   };
@@ -185,7 +236,7 @@ const UI = (() => {
     displayTasks(defaultProject);
     getProjectHeading(defaultProject);
     id += 1;
-  }
+  };
 
   const loadHomepage = () => {
     document.addEventListener("keydown", handleKeyInput);

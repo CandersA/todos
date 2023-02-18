@@ -13,7 +13,11 @@ const TodoList = (() => {
     return project;
   };
 
-  return { addProject, getProject };
+  const removeProject = (index) => {
+    delete projects[index];
+  }
+
+  return { addProject, getProject, removeProject, projects };
 })();
 
 export default TodoList;
