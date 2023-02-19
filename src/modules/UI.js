@@ -1,9 +1,22 @@
-import Project from "./Project";
 import Task from "./Task";
 import TodoList from "./TodoList";
 import Storage from "./Stroage";
 
 const UI = (() => {
+  const initExpandDescListener = (id) => {
+    const tasks = Array.from(document.getElementsByClassName("task"));
+    const thisTask = tasks[id];
+
+    const expandButton =
+      thisTask.querySelector(".expand-desc");
+    const description =
+      thisTask.querySelector(".description");
+
+    expandButton.addEventListener("click", () => {
+      description.classList.toggle("visable");
+    });
+  };
+
   const displayTasks = (project) => {
     const taskDiv = document.querySelector(".TodoList");
     const tasksDOM = Array.from(
@@ -12,14 +25,22 @@ const UI = (() => {
     tasksDOM.forEach((task) => {
       task.remove();
     });
+
+    let projectID = 0;
+
     const projectTasks = project.getTasks();
     projectTasks.forEach((task) => {
       const taskName = task.getName();
       const taskDate = task.getDate();
+      const taskDesc = task.getDesc();
       taskDiv.innerHTML += Storage.taskDisplay(
         taskName,
-        taskDate
+        taskDate,
+        taskDesc,
+        projectID
       );
+      initExpandDescListener(projectID);
+      projectID += 1;
     });
   };
 
@@ -65,6 +86,7 @@ const UI = (() => {
   const getInput = (popUp) => {
     const taskName = document.getElementById("tasktext");
     const taskDate = document.getElementById("taskdate");
+    const taskDesc = document.getElementById("taskdesc");
     const taskProject =
       document.getElementById("assignproject");
     let selectedProject = "";
@@ -85,7 +107,14 @@ const UI = (() => {
             Task(taskName.value, taskDate.value)
           );
         }
+        if (taskDesc.value !== "") {
+          const thisTask = selectedProject.getTask(
+            taskName.value
+          );
+          thisTask.setDesc(taskDesc.value);
+        }
         displayTasks(selectedProject);
+        taskDesc.value = "";
         taskName.value = "";
         taskDate.value = "";
         taskProject.value = "default";
@@ -123,11 +152,11 @@ const UI = (() => {
       button.remove();
     });
 
-    const projectRemoveIcon =
-      document.createElement("span");
+    const projectRemoveIcon = document.createElement("div");
 
     projectRemoveIcon.classList.add("project-remove");
-    projectRemoveIcon.textContent = "-";
+    projectRemoveIcon.innerHTML =
+      Storage.projectRemoveIcon();
 
     addTo.prepend(projectRemoveIcon);
 
@@ -136,7 +165,9 @@ const UI = (() => {
         document.querySelector(".projects");
       const projectToRemoveFromDOM =
         document.getElementById(`project-${id}`);
-      const projectSelect = document.getElementById(`selection-${id}`);
+      const projectSelect = document.getElementById(
+        `selection-${id}`
+      );
 
       appendToDiv.removeChild(projectToRemoveFromDOM);
       TodoList.removeProject(id);

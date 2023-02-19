@@ -110,7 +110,8 @@ body {
 
 .project-remove {
   font-size: 20px;
-  height: 16px;
+  height: 20px;
+  width: 20px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -156,17 +157,56 @@ body {
 .task {
   display: flex;
   width: 60%;
-  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
   background-color: #f3f3f3;
-  padding: 15px;
+  padding: 20px;
   box-shadow: 5px 5px 5px rgb(233, 233, 233);
 }
 
-.task span {
+.description {
+  height: 0;
+  display: none;
+  width: 100%;
+  padding: 0 42px;
+  color: grey;
+}
+
+.description.visable {
+  height: auto;
+  display: block;
+}
+
+.description p {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.task-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.expand-desc {
+  height: 22px;
+  fill: grey;
+  transition: all 150ms;
+  padding-right: 20px;
+}
+
+.expand-desc:hover,
+.expand-desc:active {
+  cursor: pointer;
+  fill: black;
+}
+
+.task-container span {
   flex: 1;
 }
 
-.task span:nth-child(2) {
+.task-container span:nth-child(3) {
   display: flex;
   justify-content: center;
 }
