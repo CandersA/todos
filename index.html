@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos</title>
+    <script defer src="main.js"></script>
+</head>
+<body>
+
+    <div class="disable"></div>
+    <div class="sidebar">
+        <button type="button" class="today sb-btn">Today</button>
+        <button type="button" class="thisweek sb-btn">This week</button>
+        <button class="newproject">Create project</button>
+        <input type="text"  class="projectinput" placeholder="Project name">
+        <div class="projects">
+        </div>
+        <span class="addicon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Add task</title><path d="M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
+        </span>
+    </div>
+    <div class="TodoList">
+        <div class="project-head"></div>
+    </div>
+
+    <div class="addpopup">
+        <span class="instruction">Press (ESC) to close window</span>
+        <form action="" method="post" onsubmit="event.preventDefault();">
+            <div class="main column">
+                <div class="column">
+                    <label for="tasktext">Task name</label>
+                    <input type="text" id="tasktext">
+                </div>
+                <div class="textarea column">
+                    <label for="taskdesc">Task Description</label>
+                    <textarea  rows="5" id="taskdesc"></textarea>
+                </div>
+            </div>
+            <div class="main column">
+                <div class="column">
+                    <label for="taskdate">Task Due</label>
+                    <input type="date" id="taskdate">
+                </div>
+                <div class="column">
+                    <label for="taskpriority">Task Priority</label>
+                    <select id="taskpriority">
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low" selected>Low</option>
+                    </select>
+                </div>
+                <div class="column">
+                    <label for="assignproject">Assign to project</label>
+                    <select id="assignproject">
+                        <option value="default">Please pick a project</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</body>
+</html>
